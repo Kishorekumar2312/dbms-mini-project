@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complaint & Grievance Redressal System</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <h2>🎯 Complaint System</h2>
+            </div>
+            <div class="nav-menu" id="navMenu">
+                <a href="#" onclick="showPage('login')" id="loginLink">Login</a>
+                <a href="#" onclick="showPage('register')" id="registerLink">Register</a>
+                <a href="#" onclick="showPage('submit')" id="submitLink" class="hidden">Submit Complaint</a>
+                <a href="#" onclick="showPage('track')" id="trackLink" class="hidden">Track</a>
+                <a href="#" onclick="showPage('admin')" id="adminLink" class="hidden">Admin</a>
+                <a href="#" onclick="logout()" id="logoutLink" class="hidden">Logout</a>
+            </div>
+            <div class="user-info hidden" id="userInfo">
+                <span id="userName"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container main-content">
+        <!-- Login Page -->
+        <div id="loginPage" class="page-content active">
+            <div class="auth-container">
+                <h2>🔐 Login to Your Account</h2>
+                <div id="loginMessage" class="message"></div>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="loginEmail" placeholder="Enter your email" autocomplete="email">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="loginPassword" placeholder="Enter your password" autocomplete="current-password">
+                </div>
+                <button onclick="login()" class="btn btn-primary btn-block">Login</button>
+                <p class="text-center mt-3">
+                    Don't have an account? <a href="#" onclick="showPage('register')">Register here</a>
+                </p>
+                <div class="demo-credentials">
+                    <p><strong>Demo Credentials:</strong></p>
+                    <p>Admin: admin@example.com / admin123</p>
+                    <p>User: user@example.com / user123</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Register Page -->
+        <div id="registerPage" class="page-content">
+            <div class="auth-container">
+                <h2>📝 Create New Account</h2>
+                <div id="registerMessage" class="message"></div>
+                <div class="form-group">
+                    <label>Full Name *</label>
+                    <input type="text" id="regName" placeholder="Enter your full name" required>
+                </div>
+                <div class="form-group">
+                    <label>Email Address *</label>
+                    <input type="email" id="regEmail" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="tel" id="regPhone" placeholder="Enter your phone number">
+                </div>
+                <div class="form-group">
+                    <label>Password *</label>
+                    <input type="password" id="regPassword" placeholder="Create a strong password" required>
+                </div>
+                <button onclick="register()" class="btn btn-primary btn-block">Register</button>
+                <p class="text-center mt-3">
+                    Already have an account? <a href="#" onclick="showPage('login')">Login here</a>
+                </p>
+            </div>
+        </div>
+
+        <!-- Submit Complaint Page -->
+        <div id="submitPage" class="page-content">
+            <div class="card">
+                <h2>📢 Submit New Complaint</h2>
+                <div id="submitMessage" class="message"></div>
+                
+                <div class="form-group">
+                    <label>Category *</label>
+                    <select id="category" required>
+                        <option value="">Select a category</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Subject *</label>
+                    <input type="text" id="subject" placeholder="Brief description of your complaint" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Priority Level *</label>
+                    <select id="priority" required>
+                        <option value="low">Low</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Detailed Description *</label>
+                    <textarea id="description" rows="6" placeholder="Provide detailed information about your complaint..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Attachments (Optional)</label>
+                    <input type="file" id="attachments" multiple accept=".jpg,.jpeg,.png,.pdf,.doc,.docx">
+                    <small class="form-text">Max 5 files, 5MB each. Allowed: JPG, PNG, PDF, DOC, DOCX</small>
+                </div>
+
+                <button onclick="submitComplaint()" class="btn btn-primary btn-block">
+                    📤 Submit Complaint
+                </button>
+            </div>
+        </div>
+
+        <!-- Track Complaints Page -->
+        <div id="trackPage" class="page-content">
+            <div class="card">
+                <h2>🔍 Track Your Complaints</h2>
+                
+                <div class="filters-container">
+                    <div class="search-box">
+                        <input type="text" id="searchBox" placeholder="Search by ID, subject..." onkeyup="loadMyComplaints()">
+                    </div>
+                    <div class="filter-select">
+                        <select id="statusFilter" onchange="loadMyComplaints()">
+                            <option value="all">All Status</option>
+                            <option value="pending">Pending</option>
+                            <option value="in-progress">In Progress</option>
+                            <option value="resolved">Resolved</option>
+                            <option value="closed">Closed</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="complaintsList" class="complaints-list">
+                    <div class="loading">Loading complaints...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Page -->
+        <div id="adminPage" class="page-content">
+            <div class="card">
+                <h2>👨‍💼 Admin Dashboard</h2>
+                
+                <!-- Statistics Cards -->
+                <div id="statsContainer" class="stats-container">
+                    <div class="loading">Loading statistics...</div>
+                </div>
+
+                <!-- Filters -->
+                <div class="filters-container">
+                    <div class="search-box">
+                        <input type="text" id="adminSearchBox" placeholder="Search complaints..." onkeyup="loadAllComplaints()">
+                    </div>
+                    <div class="filter-select">
+                        <select id="adminStatusFilter" onchange="loadAllComplaints()">
+                            <option value="all">All Status</option>
+                            <option value="pending">Pending</option>
+                            <option value="in-progress">In Progress</option>
+                            <option value="resolved">Resolved</option>
+                            <option value="closed">Closed</option>
+                        </select>
+                    </div>
+                    <div class="filter-select">
+                        <select id="adminPriorityFilter" onchange="loadAllComplaints()">
+                            <option value="all">All Priority</option>
+                            <option value="high">High</option>
+                            <option value="medium">Medium</option>
+                            <option value="low">Low</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="adminComplaintsList" class="complaints-list">
+                    <div class="loading">Loading complaints...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Complaint Detail Modal -->
+    <div id="detailModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <!-- Update Status Modal (Admin) -->
+    <div id="updateModal" class="modal">
+        <div class="modal-content modal-small">
+            <span class="close" onclick="closeUpdateModal()">&times;</span>
+            <h3>Update Complaint Status</h3>
+            <div class="form-group">
+                <label>New Status</label>
+                <select id="newStatus">
+                    <option value="pending">Pending</option>
+                    <option value="in-progress">In Progress</option>
+                    <option value="resolved">Resolved</option>
+                    <option value="closed">Closed</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Note</label>
+                <textarea id="updateNote" rows="3" placeholder="Add a note about this update..."></textarea>
+            </div>
+            <button onclick="confirmStatusUpdate()" class="btn btn-primary btn-block">Update Status</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
